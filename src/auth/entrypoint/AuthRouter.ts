@@ -1,8 +1,10 @@
 import * as express from 'express';
 import IAuthRepository from '../domain/IAuthRepository';
+import { sigupValidationRules, validate } from '../helpers/Validators';
 import IPasswordService from '../services/IPasswordService';
 import ITokenService from '../services/ITokenService';
 import SignInUseCase from '../usecases/SignInUseCase';
+import SignUpUseCase from '../usecases/SignUpUseCase';
 import AuthController from './AuthController';
 
 
@@ -16,6 +18,7 @@ export default class AuthRouter {
             authRepository, tokenService, passwordService
         );
         router.post('/signin', (req, res) => controller.signin(req, res));
+        router.post('/signup', sigupValidationRules(), validate, (req: express.Request, res: express.Response) => controller.signup(req, res));
         return router;
     }
 
@@ -25,7 +28,8 @@ export default class AuthRouter {
         passwordService: IPasswordService,
     ): AuthController {
         const signInUseCase = new SignInUseCase(authRepository, passwordService);
-        const controller = new AuthController(signInUseCase, tokenService);
+        const signUpUseCase = new SignUpUseCase(authRepository, passwordService);
+        const controller = new AuthController(signInUseCase, signUpUseCase, tokenService);
         return controller;
     }
 }

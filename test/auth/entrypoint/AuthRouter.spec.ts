@@ -45,4 +45,36 @@ describe('AuthRouter', () => {
                 expect(res.body.auth_token).to.not.be.empty;
             });
     })
+
+    it('should return errors', async () => {
+        let email = 'my@email.com';
+        let name = 'test user';
+        let password = 'pass123';
+        let type = 'email';
+
+        await request(app).post('/auth/signup').send({
+            email: '', password: password, name: name, auth_type: type
+        }).set('Accept', 'application/json')
+            .expect('Content-type', /json/)
+            .expect(422)
+            .then((res) => {
+                expect(res.body.errors).to.not.be.empty;
+            });
+    })
+
+    it('should create user and return token', async () => {
+        let email = 'my@email.com';
+        let name = 'test user';
+        let password = 'pass123';
+        let type = 'email';
+
+        await request(app).post('/auth/signup').send({
+            email: email, password: password, name: name, auth_type: type
+        }).set('Accept', 'application/json')
+            .expect('Content-type', /json/)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.auth_token).to.not.be.empty;
+            });
+    })
 })
