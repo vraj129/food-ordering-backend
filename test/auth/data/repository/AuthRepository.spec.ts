@@ -40,7 +40,7 @@ describe('AuthRepository', () => {
         }
 
         //action
-        const result = await sut.add(user.name, user.email, user.password, user.type);
+        const result = await sut.add(user.name, user.email, user.type, user.password);
 
         //assert
         expect(result).to.not.be.empty;

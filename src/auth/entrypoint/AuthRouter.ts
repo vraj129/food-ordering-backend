@@ -1,6 +1,6 @@
 import * as express from 'express';
 import IAuthRepository from '../domain/IAuthRepository';
-import { sigupValidationRules, validate } from '../helpers/Validators';
+import { siginValidationRules, sigupValidationRules, validate } from '../helpers/Validators';
 import IPasswordService from '../services/IPasswordService';
 import ITokenService from '../services/ITokenService';
 import SignInUseCase from '../usecases/SignInUseCase';
@@ -17,7 +17,7 @@ export default class AuthRouter {
         let controller = AuthRouter.composeController(
             authRepository, tokenService, passwordService
         );
-        router.post('/signin', (req, res) => controller.signin(req, res));
+        router.post('/signin', siginValidationRules(), validate, (req: express.Request, res: express.Response) => controller.signin(req, res));
         router.post('/signup', sigupValidationRules(), validate, (req: express.Request, res: express.Response) => controller.signup(req, res));
         return router;
     }
