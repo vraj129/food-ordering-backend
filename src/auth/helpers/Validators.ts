@@ -14,13 +14,15 @@ export const sigupValidationRules = () => {
 
 export const siginValidationRules = () => {
     return [
-        body('name', 'Name is required').notEmpty()
-            .if(body('auth_type').not().equals('email')),
-        body('email', 'Invalid email').not().notEmpty().isEmail().normalizeEmail(),
+        body('name', 'Name is required')
+            .if(body('auth_type').not().equals('email'))
+            .notEmpty(),
+        body('email', 'Invalid email').not().isEmpty().isEmail().normalizeEmail(),
         body('auth_type', 'Auth type is required').notEmpty(),
         body('password', 'Password is required (min 5 characters)')
             .if(body('auth_type').equals('email'))
             .notEmpty()
+
             .isLength({ min: 5 }),
     ];
 };
